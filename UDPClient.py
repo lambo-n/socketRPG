@@ -9,8 +9,8 @@ serverPort = 12000
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 clientSocket.settimeout(5.0)  # Set timeout for receiving responses
 
+# send request to server and receive response
 def send_request(action, data=None):
-    """Send request to server and receive response"""
     if data is None:
         data = {}
     data['action'] = action
@@ -27,8 +27,8 @@ def send_request(action, data=None):
         print("Error: Invalid response from server")
         return {'status': 'error', 'message': 'Invalid response'}
 
+# display gamer state in a formatted way
 def display_gamer_state(gamer_state):
-    """Display gamer state in a formatted way"""
     print("\n" + "="*50)
     print("YOUR GAMER STATE")
     print("="*50)
@@ -46,8 +46,8 @@ def display_gamer_state(gamer_state):
     print(f"Healing-potion: {healing}")
     print("="*50 + "\n")
 
+# display confirmed fight requestst as a structured table
 def display_fight_requests_table(fights):
-    """Display confirmed fight requests as a structured table"""
     if not fights:
         print("\nNo confirmed fight requests yet.\n")
         return
@@ -69,8 +69,8 @@ def display_fight_requests_table(fights):
     
     print("="*80 + "\n")
 
+# display active gamers witht heir states as a structured table
 def display_active_gamers_table(gamers):
-    """Display active gamers with their states as a structured table"""
     if not gamers:
         print("\nNo active gamers.\n")
         return
@@ -94,6 +94,7 @@ def display_active_gamers_table(gamers):
         print(f"{username:<12} {lives:<8} {sword:<8} {shield:<8} {slaying:<10} {healing:<10}")
     
     print("="*80 + "\n")
+    
 # validate strenght assignment
 def validate_strength_assignment(sword, shield, slaying, healing):
     # check if all values are in range [0-3]
@@ -242,7 +243,7 @@ def main():
         active_gamers = response.get('gamers', [])
         print(f"\nActive gamers: {', '.join(active_gamers)}")
         
-        #6- download avatar
+        #6 - download avatar
         choice = input("\nDo you want to download another gamer's avatar? (y/n): ").strip().lower()
         if choice == 'y':
             target_username = input(f"Enter the username of the gamer whose avatar you want to download ({', '.join(active_gamers)}): ").strip()
@@ -269,14 +270,14 @@ def main():
             else:
                 print("Invalid username.")
         
-        # Step 7: View confirmed fight requests
+        #7 - View confirmed fight requests
         choice = input("\nDo you want to view confirmed fight requests? (y/n): ").strip().lower()
         if choice == 'y':
             response = send_request('get_confirmed_fights', {'username': username})
             if response.get('status') == 'success':
                 display_fight_requests_table(response.get('fights', []))
         
-        # Step 8: Send fight request
+        #8 - Send fight request
         while True:
             choice = input("Do you want to send a fight request? (y/n): ").strip().lower()
             if choice != 'y':
@@ -311,7 +312,7 @@ def main():
                 print("Invalid input. Please enter a number.")
                 continue
             
-            # Get current state to check if user has enough strength
+            # get current state to check if user has enough strength
             current_state = gamer_state
             if fighting_item == 'sword' and current_state['sword'] < strength:
                 print(f"Error: You don't have enough sword strength. Your current sword strength is {current_state['sword']}.")
@@ -352,7 +353,7 @@ def main():
             if choice != 'y':
                 break
         
-        # Step 9: Get all active gamers state
+        # 9 - Get all active gamers state
         choice = input("\nDo you want to get a list of all active gamers and their current state? (y/n): ").strip().lower()
         if choice == 'y':
             response = send_request('get_all_active_gamers_state', {'username': username})
